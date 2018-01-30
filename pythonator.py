@@ -17,7 +17,8 @@ moves = {"Living Room" : {"E": "Bathroom", "W": "Kitchen", "S": "Basement", "N":
     } 
 
 #determine python's location
-locations = ["Living Room", "Bathroom", "Basement", "Kitchen", "Bedroom", "Attic"]
+#[NEW CODE: 01/29/2018] Instead of hard coding the locations, simply read them from the moves dictionary
+locations = list(moves.keys())
 py_loc = random.choice(locations)
 
 #remove the snake's location to ensure that the mouse isn't assigned
@@ -57,7 +58,7 @@ def getPrompt(loc):
 def getNextMove(direction):
     #[NEW CODE: 01/29/2018]if user enters invalid direction, return
     #current mouse location using get() method
-    return moves[mouse_loc].get(direction.upper(),mouse_loc)
+    return moves[mouse_loc].get(direction,mouse_loc)
 
 
 
@@ -67,11 +68,13 @@ print(welcome_msg)
 while True:
     #generate prompt
     prompt = getPrompt(mouse_loc)
-    option = input("You're in the {0}. Select direction ({1}) or press Q to quit ".format(mouse_loc, prompt))
-    if option.upper() == "Q":
+    #[NEW CODE: 01/29/2018] convert input to upper case right from the start so that we don't have to
+    # do that repeatedly later on
+    option = input("You're in the {0}. Select direction ({1}) or press Q to quit ".format(mouse_loc, prompt)).upper()
+    if option == "Q":
         print("Game over.")
         break
-    elif option.upper() not in prompt:
+    elif option not in prompt:
         #[NEW CODE: 01/29/2018]instead of checking generically for any of the 4 valid directions, make validation
         #context sensitive by comparing option against the string contained in the prompt variable
         print("\"{}\" is not a valid selection. Try again.".format(option))
